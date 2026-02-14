@@ -54,20 +54,94 @@
  */
 export function repeatChar(char, n) {
   // Your code here
+if (typeof char !== "string" || char.length === 0){
+    return "";
+  }
+  if (n <= 0){
+    return "";
+  }
+  return char + repeatChar(char, n - 1);
 }
 
-export function sumNestedArray(arr) {
+export function sumNestedArray(arr){
   // Your code here
+  if (!Array.isArray(arr)){
+    return 0;
+  }
+
+  if (arr.length === 0){
+    return 0;
+  }
+
+  let firstElement = arr[0];
+  let restElements = arr.slice(1);
+  let sum =0;
+
+  if(Array.isArray(firstElement)){
+    sum = sumNestedArray(firstElement);
+  }
+  else if(typeof firstElement === "number"){
+    sum = firstElement;
+  }
+
+  return sum + sumNestedArray(restElements);
 }
 
 export function flattenArray(arr) {
   // Your code here
+   if (!Array.isArray(arr)){
+    return [];
+  }
+
+  if (arr.length === 0){
+    return [];
+  }
+
+  let firstElement = arr[0];
+  let restElements = arr.slice(1);
+  if (Array.isArray(firstElement)){
+    return flattenArray(firstElement).concat(flattenArray(restElements));
+  }
+  return [firstElement].concat(flattenArray(restElements));
 }
 
 export function isPalindrome(str) {
   // Your code here
+   if (typeof str !== "string"){
+    return false;
+  }
+
+  let lowerStr = str.toLowerCase();
+  if (lowerStr.length <= 1){
+    return true;
+  }
+
+  let firstChar = lowerStr[0];
+  let lastChar = lowerStr[lowerStr.length - 1];
+
+  if (firstChar !== lastChar){
+    return false;
+  }
+
+  let middle = lowerStr.slice(1, lowerStr.length - 1);
+  return isPalindrome(middle);
 }
 
 export function generatePattern(n) {
   // Your code here
+   if (!Number.isInteger(n) || n <= 0){
+    return [];
+  }
+
+  function buildAscending(current, max) {
+    if (current > max){
+      return [];
+    }
+    let stars = repeatChar("*", current);
+    return [stars].concat(buildAscending(current + 1, max));
+  }
+
+  let ascending = buildAscending(1, n);
+  let descending = ascending.slice(0, -1).reverse();
+  return ascending.concat(descending);
 }

@@ -55,20 +55,80 @@
  */
 export function mixColors(color1, color2) {
   // Your code here
+  if (!color1 || !color2 ||typeof color1 !== "object" ||typeof color2 !== "object"){
+    return null;
+  }
+
+  if (typeof color1.r !== "number" || typeof color1.g !== "number" || typeof color1.b !== "number" || typeof color2.r !== "number" || typeof color2.g !== "number" || typeof color2.b !== "number"){
+    return null;
+  }
+
+  const newColor = {name: `${color1.name}-${color2.name}`,
+    r: Math.round((color1.r + color2.r) / 2),
+    g: Math.round((color1.g + color2.g) / 2),
+    b: Math.round((color1.b + color2.b) / 2)
+  };
+  return newColor;
 }
 
 export function adjustBrightness(color, factor) {
   // Your code here
+   if ( !color || typeof color !== "object" || typeof factor !== "number"){
+    return null;
+  }
+  function clamp(value){
+    if (value < 0) return 0;
+    if (value > 255) return 255;
+    return value;
+  }
+
+  const newColor = {
+    name: color.name,
+    r: clamp(Math.round(color.r * factor)),
+    g: clamp(Math.round(color.g * factor)),
+    b: clamp(Math.round(color.b * factor))
+  };
+  return newColor;
 }
 
 export function addToPalette(palette, color) {
   // Your code here
+  if (!Array.isArray(palette)){
+    return color ? [{ ...color }] : [];
+  }
+  if (!color || typeof color !== "object"){
+    return [...palette];
+  }
+  return [...palette, { ...color }];
 }
 
 export function removeFromPalette(palette, colorName) {
   // Your code here
+  if (!Array.isArray(palette)){
+    return [];
+  }
+  return palette.filter(function (color){
+    return color.name !== colorName;
+  });
 }
 
 export function mergePalettes(palette1, palette2) {
   // Your code here
+  const first = Array.isArray(palette1) ? palette1 : [];
+  const second = Array.isArray(palette2) ? palette2 : [];
+  const combined = [...first, ...second];
+  const seenNames = {};
+  const result = combined.filter(function (color){
+
+    if (!color || typeof color !== "object"){
+      return false;
+    }
+    if (seenNames[color.name]){
+      return false;
+    }
+    seenNames[color.name] = true;
+    return true;
+  });
+  
+  return result;
 }

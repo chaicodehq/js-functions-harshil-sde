@@ -65,6 +65,8 @@
  */
 export function createElection(candidates) {
   // Your code here
+  
+
 }
 
 export function createVoteValidator(rules) {

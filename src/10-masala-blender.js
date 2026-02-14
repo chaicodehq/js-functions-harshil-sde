@@ -54,28 +54,118 @@
  */
 export function pipe(...fns) {
   // Your code here
+    if (fns.length === 0){
+    return function (x){
+      return x;
+    };
+  }
+
+  return function (input){
+    let result = input;
+
+    for (let i = 0; i < fns.length; i++){
+      let currentFunction = fns[i];
+
+      if (typeof currentFunction === "function"){
+        result = currentFunction(result);
+      }
+    }
+    return result;
+  };
 }
 
 export function compose(...fns) {
   // Your code here
+   if (fns.length === 0){
+    return function (x){
+      return x;
+    };
+  }
+
+  return function (input){
+    let result = input;
+
+    for (let i = fns.length - 1; i >= 0; i--){
+      let currentFunction = fns[i];
+
+      if (typeof currentFunction === "function"){
+        result = currentFunction(result);
+      }
+    }
+    return result;
+  };
 }
 
 export function grind(spice) {
   // Your code here
+   if (!spice || typeof spice !== "object"){
+    return spice;
+  }
+
+  return{
+    ...spice,
+    form: "powder"
+  };
 }
 
 export function roast(spice) {
   // Your code here
+     if (!spice || typeof spice !== "object"){
+    return spice;
+  }
+
+  return{
+    ...spice,
+    roasted: true,
+    aroma: "strong"
+  };
 }
 
 export function mix(spice) {
   // Your code here
+    if (!spice || typeof spice !== "object"){
+    return spice;
+  }
+  return{
+    ...spice,
+    mixed: true
+  };
 }
 
-export function pack(spice) {
+export function pack(spice){
   // Your code here
+   if (!spice || typeof spice !== "object"){
+    return spice;
+  }
+  return{
+    ...spice,
+    packed: true,
+    label: `${spice.name} Masala`
+  };
 }
 
 export function createRecipe(steps) {
   // Your code here
+    if (!Array.isArray(steps) || steps.length === 0){
+    return function (x){
+      return x;
+    };
+  }
+
+  const stepMap = {
+    grind: grind,
+    roast: roast,
+    mix: mix,
+    pack: pack
+  };
+  let functionsToApply = [];
+
+  for (let i = 0; i < steps.length; i++){
+    let stepName = steps[i];
+
+    if (stepMap[stepName]){
+      functionsToApply.push(stepMap[stepName]);
+    }
+  }
+  return pipe(...functionsToApply);
 }

@@ -46,16 +46,80 @@
  */
 export function createFilter(field, operator, value) {
   // Your code here
+   return function (obj){
+
+    if (obj === null || typeof obj !== "object"){
+      return false;
+    }
+    let fieldValue = obj[field];
+
+    if (operator === ">") {
+      return fieldValue > value;
+    }
+    if (operator === "<"){
+      return fieldValue < value;
+    }
+    if (operator === ">="){
+      return fieldValue >= value;
+    }
+    if (operator === "<="){
+      return fieldValue <= value;
+    }
+    if (operator === "==="){
+      return fieldValue === value;
+    }
+
+    return false;
+  };
 }
 
 export function createSorter(field, order = "asc") {
   // Your code here
+   return function (a, b){
+    let valueA = a[field];
+    let valueB = b[field];
+    if (valueA < valueB){
+      return order === "asc" ? -1 : 1;
+    }
+
+    if (valueA > valueB){
+      return order === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
 }
 
 export function createMapper(fields) {
   // Your code here
+  return function (obj){
+
+    let newObject = {};
+
+    if (!Array.isArray(fields) || obj === null || typeof obj !== "object"){
+      return newObject;
+    }
+
+    for (let i = 0; i < fields.length; i++){
+      let fieldName = fields[i];
+      if (fieldName in obj){
+        newObject[fieldName] = obj[fieldName];
+      }
+    }
+    return newObject;
+  };
 }
 
 export function applyOperations(data, ...operations) {
   // Your code here
+   if (!Array.isArray(data)){
+    return [];
+  }
+  let result = data;
+  for (let i = 0; i < operations.length; i++){
+    let currentOperation = operations[i];
+    if (typeof currentOperation === "function"){
+      result = currentOperation(result);
+    }
+  }
+  return result;
 }

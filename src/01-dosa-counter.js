@@ -32,5 +32,27 @@
  *   // => { type: "plain", quantity: 1, pricePerDosa: 40, total: 40 }
  */
 export function calculateDosaOrder(type, quantity = 1, isSpicy = false) {
-  // Your code here
+  if (typeof type !== "string") {
+    return null;
+  }
+  let prices ={plain: 40,masala: 60,onion: 50,butter: 70,paper: 90,cheese: 80};
+  let dosaType = type.toLowerCase();
+  if (prices.hasOwnProperty(dosaType) === false){
+    return null;
+  }
+  if (typeof quantity !== "number" || quantity <= 0 || Number.isNaN(quantity)){
+    return null;
+  }
+  let basePrice = prices[dosaType];
+  let pricePerDosa;
+
+  if (isSpicy === true){
+    pricePerDosa = basePrice + 10;
+  } 
+  else{
+    pricePerDosa = basePrice;
+  }
+  let total = pricePerDosa * quantity;
+  return {type: dosaType,quantity: quantity,pricePerDosa: pricePerDosa,total: total
+  };
 }
